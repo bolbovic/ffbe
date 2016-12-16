@@ -4,7 +4,8 @@ import ImageAnalyzer from './analyzer/ImageAnalyzer';
 import logo from './logo.svg';
 import './App.css';
 
-let testImage1 = require('../data/838446Capture.png');
+let testImage1 = require('../data/X0bzo8f.png');
+//let testImage1 = require('../data/838446Capture.png');
 
 class App extends Component {
   render() {

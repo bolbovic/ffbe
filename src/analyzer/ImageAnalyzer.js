@@ -4,23 +4,20 @@ import { orderBy } from 'lodash';
 require('tracking');
 const Tracking = window.tracking;
 
-let podium = require('../../img/podium3.png');
-let cPodium = document.createElement('canvas');
-let img = new Image();
-img.onload = (evt) => {
-  let canvas = cPodium;
-  canvas.width = img.width;
-  canvas.height = img.height;
-  canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
-}
-img.src = podium;
+const POD_BASE_HEIGHT = 1440;
+const POD_BASE_WIDTH = 2560;
 
-class MyTracker extends Tracking.Tracker {
-  constructor(images) {
+let podium3Base = require('../../img/podium3.png');
+let podium4Base = require('../../img/podium4.png');
+let podium5Base = require('../../img/podium5.png');
+
+class TrackPodiums extends Tracking.Tracker {
+  constructor(pods) {
     super();
+    this.pods = pods;
   }
 
-  getSummary(p, tW, x, y, w, h, precision = 50) {
+  getSummary(p, tW, x, y, w, h, precision = 100) {
     let colors = {}, pix = new Uint8ClampedArray(w * h * 4);
     for( let i = 0; i < w * h * 4; i += 4){
       let idx = ((y + Math.floor( (i/4) / w)) * tW + x + ((i/4) % w))*4;
@@ -67,45 +64,72 @@ class MyTracker extends Tracking.Tracker {
   }
 
   getColor(idx) {
-    return `#${Math.floor(16 * idx).toString(16)}${Math.floor(16 * idx).toString(16)}${Math.floor(16 * idx).toString(16)}`;
+    return `#${Math.floor(15 * idx).toString(16)}${Math.floor(15 * idx).toString(16)}${Math.floor(15 * idx).toString(16)}`;
   }
 
   track(pixels, width, height) {
     const startTime = new Date().getTime(), data = [];
+    let cv = this.pods[2];
 
-    let podPixels = cPodium.getContext('2d').getImageData(0, 0, img.width, img.height).data;
-    let podSum = this.getSummary(podPixels, img.width, 0, 0, img.width, img.height, 100);
-    console.log( podSum );
+    let podPixels = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
+    let podSum = this.getSummary(podPixels, cv.width, 0, 0, cv.width, cv.height, 100);
+    console.log( podSum, width, height );
     console.log(`Process time: ${new Date().getTime() - startTime}`);
 
     //Algo
     // start is pod.width / 4,  pod.height/4
-    let ign = new Uint8ClampedArray(width * height), h = img.height, w = img.width;
+    let ign = new Uint8ClampedArray(width * height), h = cv.height, w = cv.width, lastIdx = 0;
     console.log(width, height);
     for ( let y = 0; y < height - h; y++) {
       for ( let x = 0; x < width - w; x++ ) {
         // calculate the object
         if ( ign[y * width + x] === 0 ) {
           let sum = this.getSummary(pixels, width, x, y, w, h);
-          // if the object doesn't have any of the colors from the top 10...
-          let idx = this.compareSummaries(podSum, sum);
 
+          // if the object doesn't have any of the colors...
+          let idx = this.compareSummaries(podSum, sum);
           if (idx === 0) {
             // ignore the complete part scanned
             for ( let i = 0; i < h * w; i++ ) {
               ign[(y + Math.floor(i / w)) * width + x + (i % w)] = 1;
             }
-          } else if ( idx < .05 ) {
+          } else if ( idx < .25 ) {
             for ( let i = 0; i < h * w / 4; i++ ) {
               ign[(y + Math.floor(i / (w / 2))) * width + x + (i % (w/2))] = 1;
             }
-          } else if ( idx > .40 ) {
-            data.push({color: this.getColor(idx), x, y, height: h, width: w});
+          } else if ( idx > .90 ) {
+            data.push({color: this.getColor(idx), x, y, height: h, width: w, idx});
+            //console.log(x, y, idx);
+          } else if ( idx < lastIdx ) {
+            for ( let i = 0; i < w / 2; i++ ) {
+              ign[y * width + x + i] = 1;
+            }
           }
-          console.log(x, y, idx);
+          lastIdx = idx;
         }
       }
     }
+    console.log(`Process time: ${new Date().getTime() - startTime}`);
+
+    let realData = [];
+    data.forEach( d => {
+      let found = false;
+      realData.forEach( (r, k) => {
+        if ( !found && Math.abs(r.x - d.x) < w && Math.abs(r.y - d.y) < h ) {
+          found = true;
+          if ( r.idx < d.idx) {
+            realData[k] = d;
+          }
+        }
+      });
+      if ( ! found ) {
+        realData.push(d);
+      }
+    });
+
+    /*realData = orderBy(data, ['idx'], ['desc'])
+      .filter( (o) => { return o.idx > .90});*/
+
     // for on the size of the sample
       // for on the pixels x
         // for on the pixels y
@@ -115,19 +139,16 @@ class MyTracker extends Tracking.Tracker {
         //endfor
       //endfor
     //endfor
-      
+    console.log(data);
+    console.log(realData);
     console.log(`Process time: ${new Date().getTime() - startTime}`)
     this.emit('track', {
       //data: [{color:'magenta', x: 0, y: 0, height: 50, width: 50}]
-      data
+      data: realData
+      //data
     });
   }
 }
-
-
-const DEFAULT_WIDTH = 1080;
-const DEFAULT_HEIGHT = 1920;
-const WHITE_VALUE = 220;
 
 type Props = {
   onResolve: Function,
@@ -147,6 +168,12 @@ class ImageAnalyzer extends React.Component {
     };
     this.me = `lloooolll${new Date().getUTCMilliseconds()}`;
     this.imgId = `img${new Date().getUTCMilliseconds()}`;
+    this.podiumsToLoad = [
+      podium3Base,
+      podium4Base,
+      podium5Base
+    ];
+    this.pods = [];
   }
 
   getContextFromScreenZone( s, img, showCanvas = false ) {
@@ -167,65 +194,62 @@ class ImageAnalyzer extends React.Component {
     return context;
   }
 
-  isBlue(data, i) {
-    return (data[i+2] < 210);
-  }
-
-  isWhite(data, i) {
-    return (data[i] > WHITE_VALUE && data[i+1] > WHITE_VALUE && data[i+2] > WHITE_VALUE );
-  }
-
-  handleLoad = (evt) => {
+  handleSrcLoad = (evt) => {
     let that = this;
     let img = evt.target;
-    this.coefX = img.width / DEFAULT_WIDTH;
-    this.coefY = img.height / DEFAULT_HEIGHT;
-
     // Units
-    /*let context = this.getContextFromScreenZone({
-      x: 0, y:650, width: DEFAULT_WIDTH, height: 300
-    }, img, true);*/
-
-    /*let colors = new Tracking.ColorTracker(['magenta', 'blue', 'yellow']);
-    colors.on('track', evt => {
-      console.log('tracked');
-      console.log(evt.data);
-      evt.data.forEach(function(rect) {
-        that.plot(rect.x, rect.y, rect.width, rect.height, rect.color);
-      });
-    });*/
-    let tracker = new MyTracker();
+    let tracker = new TrackPodiums(this.pods);
     tracker.on('track', evt => {
       evt.data.forEach(function(rect) {
         that.plot(rect.x, rect.y, rect.width, rect.height, rect.color);
       });
     });
-//    Tracking.track(`#${this.imgId}`, colors);
     Tracking.track(`#${this.imgId}`, tracker );
-
     this.props.onResolve && this.props.onResolve('nop');
+  }
+
+  handlePodiumLoad = (evt) => {
+    let img = evt.target;
+    let canvas = document.createElement('canvas');
+    console.log(img.width, img.height);
+    canvas.width = img.width;
+    canvas.height = img.height;
+    canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+    this.pods.push(canvas);
+    document.getElementById(this.me).appendChild(canvas);
+    this.loadNextPodium();
+  }
+
+  loadNextPodium() {
+    let podSrc = this.podiumsToLoad.shift();
+    let img = new Image();
+    img.onload = this.handlePodiumLoad;
+    if ( podSrc ) {
+      img.src = podSrc;
+    } else {
+      img.onload = this.handleSrcLoad;
+      img.src = this.props.src;
+      this.img = img;
+    }
   }
 
   plot(x, y, w, h, color) {
     let img = document.getElementById(this.imgId);
     let rect = document.createElement('div');
-    document.querySelector('.image-analyzer').appendChild(rect);
+    document.getElementById(this.me).appendChild(rect);
     rect.classList.add('rect');
-    rect.style.border = '2px solid ' + color;
+    rect.style.border = '1px solid ' + color;
     rect.style.width = w + 'px';
     rect.style.height = h + 'px';
     rect.style.left = (img.offsetLeft + x) + 'px';
     rect.style.top = (img.offsetTop + y) + 'px';
   };
-  
   /* End Component Custom Methods */
 
   /* React Component LifeCycle Methods */
   //componentWillMount() {}
   componentDidMount() {
-    this.img = new Image();
-    this.img.onload = this.handleLoad;
-    this.img.src = this.props.src;
+    this.loadNextPodium();
   }
   //componentWillReceiveProps(nextProps) {}
   //shouldComponentUpdate(nextProps, nextState) {}
