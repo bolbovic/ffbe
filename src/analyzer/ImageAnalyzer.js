@@ -4,17 +4,18 @@ import { orderBy } from 'lodash';
 require('tracking');
 const Tracking = window.tracking;
 
-const POD_BASE_HEIGHT = 1440;
-const POD_BASE_WIDTH = 2560;
+const POD_BASE_WIDTH = 1440;
+//const POD_BASE_HEIGHT = 2560;
 
 let podium3Base = require('../../img/podium3.png');
 let podium4Base = require('../../img/podium4.png');
 let podium5Base = require('../../img/podium5.png');
 
 class TrackPodiums extends Tracking.Tracker {
-  constructor(pods) {
+  constructor(pods, img) {
     super();
     this.pods = pods;
+    this.img = img;
   }
 
   getSummary(p, tW, x, y, w, h, precision = 100) {
@@ -69,10 +70,24 @@ class TrackPodiums extends Tracking.Tracker {
 
   track(pixels, width, height) {
     const startTime = new Date().getTime(), data = [];
-    let cv = this.pods[2];
+    let cv = this.pods[0], ratio = width / POD_BASE_WIDTH;
 
+    if ( ratio !== 1 ) {
+      let newCV = document.createElement('canvas');
+      newCV.width =  cv.width * ratio;
+      newCV.height = cv.height * ratio;
+      newCV.getContext('2d').drawImage(cv,
+        0, 0,
+        cv.width, cv.height,
+        0, 0,
+        newCV.width, newCV.height
+      );
+      cv = newCV;
+      this.img.appendChild(cv);
+    }
+    console.log(cv.width, cv.height);
     let podPixels = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
-    let podSum = this.getSummary(podPixels, cv.width, 0, 0, cv.width, cv.height, 100);
+    let podSum = this.getSummary(podPixels, cv.width, 0, 0, cv.width, cv.height, 100 * ratio * ratio);
     console.log( podSum, width, height );
     console.log(`Process time: ${new Date().getTime() - startTime}`);
 
@@ -93,17 +108,17 @@ class TrackPodiums extends Tracking.Tracker {
             for ( let i = 0; i < h * w; i++ ) {
               ign[(y + Math.floor(i / w)) * width + x + (i % w)] = 1;
             }
-          } else if ( idx < .25 ) {
+          } else if ( idx < .10 ) {
             for ( let i = 0; i < h * w / 4; i++ ) {
               ign[(y + Math.floor(i / (w / 2))) * width + x + (i % (w/2))] = 1;
             }
-          } else if ( idx > .90 ) {
+          } else if ( idx > .50 ) {
             data.push({color: this.getColor(idx), x, y, height: h, width: w, idx});
             //console.log(x, y, idx);
-          } else if ( idx < lastIdx ) {
+          /*} else if ( idx < lastIdx ) {
             for ( let i = 0; i < w / 2; i++ ) {
               ign[y * width + x + i] = 1;
-            }
+            }*/
           }
           lastIdx = idx;
         }
@@ -144,8 +159,8 @@ class TrackPodiums extends Tracking.Tracker {
     console.log(`Process time: ${new Date().getTime() - startTime}`)
     this.emit('track', {
       //data: [{color:'magenta', x: 0, y: 0, height: 50, width: 50}]
-      data: realData
-      //data
+      //data: realData
+      data
     });
   }
 }
@@ -198,13 +213,13 @@ class ImageAnalyzer extends React.Component {
     let that = this;
     let img = evt.target;
     // Units
-    let tracker = new TrackPodiums(this.pods);
+    let tracker = new TrackPodiums(this.pods, document.getElementById(this.me));
     tracker.on('track', evt => {
       evt.data.forEach(function(rect) {
         that.plot(rect.x, rect.y, rect.width, rect.height, rect.color);
       });
     });
-    Tracking.track(`#${this.imgId}`, tracker );
+    Tracking.track(img, tracker );
     this.props.onResolve && this.props.onResolve('nop');
   }
 

@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import ImageAnalyzer from './analyzer/ImageAnalyzer';
+//import ImageAnalyzer from './analyzer/ImageAnalyzer';
+import ImageSaver from './components/ImageSaver';
 
 import logo from './logo.svg';
 import './App.css';
 
-let testImage1 = require('../data/X0bzo8f.png');
 //let testImage1 = require('../data/838446Capture.png');
+//let testImage1 = require('../data/EKdwelo.jpg');
+//let testImage1 = require('../data/I3QaQZo.png');
+//let testImage1 = require('../data/lM79ie2.png');
+//let testImage1 = require('../data/X0bzo8f.png');
 
 class App extends Component {
   render() {
@@ -16,11 +20,12 @@ class App extends Component {
           <h2>Welcome to React</h2>
         </div>
         <div className="App-intro">
-          <ImageAnalyzer src={ testImage1 } />
+          <ImageSaver />
         </div>
       </div>
     );
   }
 }
+          //<ImageAnalyzer src={ testImage1 } />
 
 export default App;

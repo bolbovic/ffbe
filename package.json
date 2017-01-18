@@ -6,6 +6,10 @@
     "react-scripts": "0.8.4"
   },
   "dependencies": {
+    "dotenv": "^4.0.0",
+    "firebase": "^3.6.6",
+    "firebase-admin": "^4.0.4",
+    "image-data-uri": "^1.0.0",
     "react": "15.4.1",
     "react-dom": "15.4.1",
     "resemblejs": "^2.2.2",
