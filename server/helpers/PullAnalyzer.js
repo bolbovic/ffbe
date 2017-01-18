@@ -27,7 +27,7 @@ module.exports = (upload) => {
         try {
           fs.accessSync(compareRealResultName);
           // Launch maximas
-          let cmd = './maxima -n 11 -t 90';
+          let cmd = './scripts/maxima -n 11 -t 90';
           exec(`${cmd} ${compareRealResultName} ${maximaResultFile}`, (err, stdout, stderr) => {
             if ( !err ) {
               let lines = stdout.split('\n'), pods = [];
@@ -36,7 +36,7 @@ module.exports = (upload) => {
                   let [coord, gray] = line.split(' ');
                   let [x, y] = coord.split(',');
                   let [a,b,percent] = gray.split(',');
-                  console.log(x, y, parseInt(percent));
+                  //console.log(x, y, parseInt(percent));
                   pods.push({x, y, percent});
                 }
               });
