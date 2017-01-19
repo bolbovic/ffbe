@@ -1,12 +1,17 @@
 'use strict';
-const ImageDataURI = require('image-data-uri');
+/*const ImageDataURI = require('image-data-uri');
 const DBSaver = require('./DBSaver.js');
 const exec = require('child_process').exec;
-const fs = require('fs');
+const fs = require('fs');*/
+const ElevenPullsAnalyzer = require('../tasks/ElevenPullsAnalyzer.js');
 
 module.exports = (upload) => {
+  let epa = new ElevenPullsAnalyzer(upload);
+  epa.start();
+
   // Saving image to work on it
-  let fileName = `./tmp/${upload.id}.png`;
+  /*let filePrefix = `./tmp/${upload.id}`;
+  let fileName = `${filePrefix}.png`;
   ImageDataURI.outputFile(upload.src, fileName);
 
   // Launch verifications
@@ -14,9 +19,9 @@ module.exports = (upload) => {
     ['blue', 'gold', 'rainbow'].forEach( color => {
       let cmd = 'compare -metric rmse -subimage-search';
       let colorFile = `./img/podiums/${color}.png`;
-      let compareResultFile = `${fileName}-${color}-result.png`;
-      let compareRealResultName = `${fileName}-${color}-result-1.png`;
-      let maximaResultFile = `${fileName}-${color}-result-maxima.png`;
+      let compareResultFile = `${filePrefix}-${color}-result.png`;
+      let compareRealResultName = `${filePrefix}-${color}-result-1.png`;
+      let maximaResultFile = `${filePrefix}-${color}-result-maxima.png`;
       exec(`${cmd} ${fileName} ${colorFile} ${compareResultFile}`, (err, stdout, stderr) => {
         if ( err.code !== 1 ) {
           console.log('ERROR');
@@ -50,6 +55,6 @@ module.exports = (upload) => {
       });
     });
   }, 1000);
-
+  */
   return null;
 };
