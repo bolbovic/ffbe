@@ -19,5 +19,9 @@ module.exports = {
   savePods: (upId, color, pods) => {
     console.log(`${upId} saving ${color} pods`);
     db.child(upId).child(`pods/${color}`).set(pods);
+  },
+  saveUnits: (upId, units) => {
+    console.log(`${upId} saving units`);
+    db.child(upId).child(`units`).set(units);
   }
 }

@@ -1,7 +1,7 @@
 'use strict';
 require('dotenv').config();
 const { Database } = require('./helpers/firebase.js');
-const PullAnalyzer = require('./helpers/PullAnalyzer.js');
+const ElevenPullsAnalyzer = require('./tasks/ElevenPullsAnalyzer.js');
 
 
 const ENDPOINT = 'uploads';
@@ -17,7 +17,9 @@ Database
     console.log(`New ${upload.type} upload!`);
     //db.child('apiState').set('pending');
     if ( upload.type === '10pull' ) {
-      let pa = PullAnalyzer(upload);
+      let epa = new ElevenPullsAnalyzer(upload);
+      epa.init();
+      epa.start();
       //console.log(pa);
       //db.child('apiState').set('ok');
       //db.child('pulls').set(pa);

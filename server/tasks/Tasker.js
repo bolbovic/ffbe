@@ -4,6 +4,12 @@ class Tasker {
     this.node = node;
   }
 
+  init() {
+    this.tasks.forEach( (task) => {
+      task.init();
+    });
+  }
+
   start() {
     this.nextTask();
   }

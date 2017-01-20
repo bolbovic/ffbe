@@ -24,29 +24,32 @@ class Task extends EventEmitter {
 
   // Used by the tasker
   done() { // Should be launched by the task when it's over
-    this.node._tasksStatus[this.name] = 'done';
+    this.node.tasksStatus[this.name] = 'done';
     saveStatus(this.node, this.name, 'done');
     this.emit('done');
   }
 
   error(err) {
-    this.node._tasksStatus[this.name] = 'error';
+    this.node.tasksStatus[this.name] = 'error';
     saveStatus(this.node, this.name, 'error', err);
     this.emit('error');
   }
 
   getStatus() {
-    return this.node._tasksStatus[this.name];
+    return this.node.tasksStatus[this.name];
   }
 
   init() {
-    if (!this.node._tasksStatus) {
-      this.node._tasksStatus = {};
-    }
+    if (!this.node.tasksStatus)
+      this.node.tasksStatus = {};
 
-    this.node._tasksStatus[this.name] = 'init';
+    if ( this.node.tasksStatus[this.name] === undefined )
+      this.node.tasksStatus[this.name] = 'init';
+
     if ( this.alreadyDone() ) {
-      this.done();
+      if ( this.node.tasksStatus[this.name] !== 'done' ) {
+        this.done();
+      }
     } else {
       saveStatus(this.node, this.name, 'init');
     }
@@ -63,7 +66,7 @@ class Task extends EventEmitter {
   }
 
   running() {
-    this.node._tasksStatus[this.name] = 'running';
+    this.node.tasksStatus[this.name] = 'running';
     saveStatus(this.node, this.name, 'running');
     this.emit('running');
   }

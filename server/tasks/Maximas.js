@@ -11,7 +11,6 @@ class Maximas extends Task {
     this.filePrefix = `./tmp/${this.node.id}`;
     this.compareFile = `${this.filePrefix}-${this.color}-result-1.png`;
     this.maximasFile = `${this.filePrefix}-${this.color}-result-maxima.png`;
-    this.init();
   }
 
   alreadyDone() {

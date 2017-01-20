@@ -8,7 +8,6 @@ class ComparePods extends Task {
     super(node, `pod-${podColor}`);
     this.color = podColor;
     this.filePrefix = `./tmp/${this.node.id}`;
-    this.init();
   }
 
   alreadyDone() {
