@@ -13,7 +13,10 @@ class DecodePods extends Task {
   }
 
   canBeLaunch() {
-    return this.node.pods !== undefined;
+    return this.node.pods !== undefined && 
+      this.node.pods.blue !== undefined &&
+      this.node.pods.gold !== undefined &&
+      this.node.pods.rainbow !== undefined;
   }
 
   start() {
@@ -23,7 +26,7 @@ class DecodePods extends Task {
     Object.keys(this.node.pods).forEach( color => {
       let cPods = this.node.pods[color];
       cPods.forEach( pod => {
-        if ( parseInt(pod.percent) > 90 ) {
+        if ( parseInt(pod.percent) > 89 ) {
           units.push({
             color,
             x: parseInt(pod.x),

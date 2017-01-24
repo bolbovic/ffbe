@@ -38,6 +38,8 @@ class Maximas extends Task {
               pods.push({x, y, percent});
             }
           });
+          if ( this.node.pods === undefined ) this.node.pods = {};
+          this.node.pods[this.color] = pods;
           DBSaver.savePods(this.node.id, this.color, pods);
           console.log(`Done with Maximas ${this.color} ${this.node.id}`);
           this.done();

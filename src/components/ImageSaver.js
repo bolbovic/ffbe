@@ -53,7 +53,6 @@ class ImageAnalyzer extends React.Component {
           //this.setState({screens});
           let img = new Image();
           img.onload = (evt) => {
-            let i = evt.target;
             let cv = document.createElement('canvas');
             cv.width = 360;
             cv.height = img.height * 360 / img.width;

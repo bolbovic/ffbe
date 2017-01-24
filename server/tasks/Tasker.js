@@ -1,7 +1,10 @@
-class Tasker {
+const EventEmitter = require('events');
+
+class Tasker extends EventEmitter {
   constructor(tasks, node) {
     this.tasks = tasks;
     this.node = node;
+    this.done = true;
   }
 
   init() {
@@ -38,11 +41,13 @@ class Tasker {
         setTimeout(this.nextTask.bind(this, timeWithoutLaunch + 1), 1000);
       } else {
         console.log('cannot finish the job it seems...');
-        console.log(tasks);
+        console.log(this.tasks);
         // TODO debug
       }
-    } else if ( taskNotLaunched === undefined ) {
+    } else if ( taskNotLaunched === undefined && this.done === false) {
       console.log(`It seems everything is done for ${this.node.id}`);
+      this.done = false;
+      this.emit('done');
     }
   }
 

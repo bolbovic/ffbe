@@ -1,0 +1,54 @@
+.upload-list .upload {
+  display: inline-block;
+  width: 700px;
+}
+
+.upload-list .upload .img {
+  float: left;
+  width: 300px;
+}
+.upload-list .upload .infos {
+  float: left;
+  width: 400px;
+}
+.upload-list .upload .img img {
+  border: 1px solid grey;
+  width: 100%;
+}
+.upload-list .upload .infos {
+  float: left;
+}
+
+
+.infos .unit-list .unit {
+  float: left;
+}
+.infos .unit-list .unit .color-gold {
+  border: 3px solid gold;
+}
+.infos .unit-list .unit .color-blue {
+  border: 3px solid deepskyblue;
+}
+.infos .unit-list .unit .color-rainbow {
+  border: 3px solid hotpink;
+}
+
+
+.infos .task-status div{
+  display: inline-block;
+}
+.infos .task-status .status {
+  padding-left: 5px;
+}
+.infos .task-status .status.status-done {
+  color: green;
+}
+.infos .task-status .status.status-running {
+  color: orange;
+}
+.infos .task-status .status.status-error {
+  color: red;
+}
+.infos .task-status .status.status-init {
+  color: grey;
+}
