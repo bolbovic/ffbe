@@ -1,7 +1,8 @@
 import React from 'react';
 import { DatabaseRef } from '../config/Firebase';
+import Uploader from '../components/Uploader.js';
 
-let iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+//let iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
 class ImageAnalyzer extends React.Component {
   constructor(props: Props) {
@@ -13,94 +14,52 @@ class ImageAnalyzer extends React.Component {
     this.db = DatabaseRef.child('uploads');
   }
 
-  handleClick = () => {
-    this.log('Click triggered...');
-    this.log(document.getElementById('files').toString());
-    this.log(document.getElementById('files').files.length.toString());
-    this.readFiles(document.getElementById('files').files);
+  uploadComplete = (params) => {
+    console.log(JSON.parse(params.response.rawResponse.rawResponse));
+    let ref = this.db.push();
+    ref.set({
+      id: ref.key,
+      cloudinary: JSON.parse(params.response.rawResponse.rawResponse),
+      type: '11pull'
+    });
   }
 
-  handleChange = (evt) => {
-    let files = evt.target.files;
-    this.log('Change triggered...');
-    this.log(files.toString());
-    this.log(files.length.toString());
-    this.readFiles(files);
+  uploadError = (p) => {
+    console.log('uploadError');
+    console.log(p);
   }
 
-  log(str) {
-    let logs = this.state.logs;
-    logs.push(str);
-    this.setState({logs});
+  uploadPreparing = (p) => {
+    console.log('uploadPreparing');
+    console.log(p);
   }
 
-  readFiles(files) {
-    this.setState({screens:[]});
-    this.log( 'Reading files now...' );
-    if ( FileReader ) {
-      this.log( 'FileReader is here' );
-    } else {
-      this.log( 'No FileReader...' );
-    }
-    for ( let i = 0; i < files.length; i++ ) {
-      let file = files[i];
-      if (FileReader) {
-        this.log( `Reading file ${file.name}`);
-        let fr = new FileReader();
-        fr.onload = () => {
-          //let { screens } = this.state;
-          //screens.push({key:i, data: fr.result});
-          //this.setState({screens});
-          let img = new Image();
-          img.onload = (evt) => {
-            let cv = document.createElement('canvas');
-            cv.width = 360;
-            cv.height = img.height * 360 / img.width;
-            cv.getContext('2d').drawImage(
-              img,
-              0, 0, img.width, img.height,
-              0, 0, cv.width, cv.height
-            );
-            // Saving data
-            //let src = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height);
-            let src = cv.toDataURL();
-            let ref = this.db.push();
-            ref.set({
-              id: ref.key,
-              src,
-              type: '10pull'
-            });
-            console.log('Image saved');
-          }
-          img.src = fr.result;
-        };
-        fr.readAsDataURL(file);
-      }
-    }
-    this.log( 'Finish reading files' );
+  uploadProgress = (p) => {
+    console.log('uploadProgress');
+    console.log(p);
   }
 
   renderInput () {
-    return ( iOS ?
-      <div>
-        <input
-          id="files"
-          multiple={ true }
-          onChange={ this.handleChange }
-          type="file"
-        />
-        <input
-          id="button-analyze"
-          onClick={ this.handleClick }
-          type="button"
-          value="Analyze"
-        />
-      </div>:
-      <input
-        multiple={ true }
-        onChange={ this.handleChange }
-        type="file"
-      />
+    let uploadConf = {
+      request: {
+        name: 'file',
+        url: 'https://api.cloudinary.com/v1_1/bolbo/image/upload',
+        params: {
+          'upload_preset': 'pqbwsewj',
+          tags: ['11pulls']
+        }
+      }
+    };
+    return (
+      <Uploader
+        uploadComplete={ this.uploadComplete }
+        uploadConf={ uploadConf }
+        uploadError={ this.uploadError }
+        uploadPreparing={ this.uploadPreparing }
+        uploadProgress={ this.uploadProgress }
+      >
+          <div>{ 'ADD FILES' }</div>
+      </Uploader>
     );
   }
 

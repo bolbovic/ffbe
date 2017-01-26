@@ -50,7 +50,7 @@ const Upload = (props) => {
   let d = props.data;
   return (
     <div className="upload">
-      <div className="img"><img alt={ d.id } src={ d.src } /></div>
+      <div className="img"><img alt={ d.id } src={ d.cloudinary.url } /></div>
       <div className="infos">
         { d.tasksStatus ? <TaskList data={ d.tasksStatus } /> : null }
         { d.units ? <UnitList data={ d.units } /> : null }
@@ -65,7 +65,7 @@ class UploadList extends React.Component {
     this.state = {
       uploads: {}
     };
-    this.db = DatabaseRef.child('uploads').orderByChild('type').equalTo('10pull');
+    this.db = DatabaseRef.child('uploads').orderByChild('type').equalTo('11pull');
   }
 
   newUpload = (snap) => {

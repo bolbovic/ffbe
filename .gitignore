@@ -17,3 +17,6 @@ tmp
 .env
 npm-debug.log
 yarn.lock
+
+# for now
+img/units

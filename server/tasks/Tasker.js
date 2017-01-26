@@ -2,6 +2,7 @@ const EventEmitter = require('events');
 
 class Tasker extends EventEmitter {
   constructor(tasks, node) {
+    super();
     this.tasks = tasks;
     this.node = node;
     this.done = true;
@@ -18,7 +19,7 @@ class Tasker extends EventEmitter {
   }
 
   nextTask(timeWithoutLaunch = 0) {
-    console.log(`Tasker of ${this.node.id} is looking for next tasks to execute (${timeWithoutLaunch})...`);
+    //console.log(`Tasker of ${this.node.id} is looking for next tasks to execute (${timeWithoutLaunch})...`);
     let taskNotLaunched = undefined;
     this.tasks.forEach( (task) => {
       if ( task.isReady() ) {
