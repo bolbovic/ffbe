@@ -27,11 +27,8 @@ class DecodePods extends Task {
       let cPods = this.node.pods[color];
       cPods.forEach( pod => {
         if ( parseInt(pod.percent) > 89 ) {
-          units.push({
-            color,
-            x: parseInt(pod.x),
-            y: parseInt(pod.y)
-          });
+          let x = parseInt(pod.x), y = parseInt(pod.y);
+          units.push({color, x, y});
         }
       });
     });
