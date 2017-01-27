@@ -1,3 +1,15 @@
+.clear {
+  clear: both;
+}
+
+.unit-pull {
+  display: inline-block;
+}
+
+.upload-list {
+  display: block;
+  width: 100%;
+}
 .upload-list .upload {
   display: inline-block;
   width: 700px;
@@ -20,16 +32,16 @@
 }
 
 
-.infos .unit-list .unit {
+.unit {
   float: left;
 }
-.infos .unit-list .unit .color-gold {
+.unit .color-gold {
   border: 3px solid gold;
 }
-.infos .unit-list .unit .color-blue {
+.unit .color-blue {
   border: 3px solid deepskyblue;
 }
-.infos .unit-list .unit .color-rainbow {
+.unit .color-rainbow {
   border: 3px solid hotpink;
 }
 

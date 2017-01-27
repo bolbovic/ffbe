@@ -44,7 +44,7 @@ class CalcSign extends Task {
     let bool = true;
     if ( this.node.units ) {
       this.node.units.forEach( unit => {
-        if ( unit.image === undefined ) bool = false;
+        if ( unit.x === undefined ) bool = false;
       })
     } else {
       bool = false;

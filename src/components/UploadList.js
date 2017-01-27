@@ -18,7 +18,7 @@ const TaskList = (props) => {
     <div className="task-list">
       { ['save-tmp', 'pod-blue', 'pod-gold', 'pod-rainbow', 
          'maxima-blue', 'maxima-gold', 'maxima-rainbow',
-         'decode-pods', 'get-images', 'unit-signature'].map( task => {
+         'decode-pods', 'calc-sign', 'find-units'].map( task => {
         return <TaskStatus key={ task } name={ task } status={ d[task] } />;
       })}
     </div>

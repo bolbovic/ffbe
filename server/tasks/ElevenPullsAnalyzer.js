@@ -2,7 +2,7 @@ const Tasker = require('./Tasker.js');
 
 const ComparePods = require('./ComparePods.js');
 const DecodePods = require('./DecodePods.js');
-const GetImages = require('./GetImages.js');
+const FindUnits = require('./FindUnits.js');
 const Maximas = require('./Maximas.js');
 const SaveTmpImage = require('./SaveTmpImage.js');
 const CalculateSign = require('./CalcSign.js');
@@ -18,8 +18,8 @@ class ElevenPullsAnalyzer extends Tasker {
     tasks.push(new Maximas(node, 'gold'));
     tasks.push(new Maximas(node, 'rainbow'));
     tasks.push(new DecodePods(node));
-    tasks.push(new GetImages(node));
     tasks.push(new CalculateSign(node));
+    tasks.push(new FindUnits(node));
 
     node.tasks = tasks.map( task => {
       return task.toDbStatus();
