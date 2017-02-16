@@ -1,6 +1,6 @@
 const Section = require('../Section.js');
 
-class UnitStats extends Section {
+class UnitInfos extends Section {
   getSection(doc) {
     return doc.elements[0].elements[0];
   }
@@ -47,4 +47,4 @@ class UnitStats extends Section {
   }
 }
 
-module.exports = UnitStats;
+module.exports = UnitInfos;
