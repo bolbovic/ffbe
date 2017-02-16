@@ -26,11 +26,12 @@ const TaskList = (props) => {
 };
 
 const Unit = (props) => {
-  let { color, image, name } = props.data;
+  let { color, image, unitId, similarities } = props.data;
   return (
     <div className="unit">
       <img alt={ color } className={ `color-${color}` } src={ image } />
-      <div className="name">{ name ? name : '???' }</div>
+      <div className="name">{ unitId !== undefined ? unitId : '???' }</div>
+      <div className="similarities">{ similarities !== undefined ? similarities : '???' }</div>
     </div>
   );
 };

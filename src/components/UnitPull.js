@@ -1,12 +1,13 @@
 import React from 'react';
 import { DatabaseRef } from '../config/Firebase';
+import { values } from 'lodash';
 
 const Unit = (props) => {
   let { color, image, name } = props.data;
   return (
     <div className="unit">
       <img alt={ color } className={ `color-${color}` } src={ image } />
-      <div className="name">{ name ? name : '???' }</div>
+      <div className="name">{ name !== undefined ? name : '???' }</div>
     </div>
   );
 };
@@ -36,11 +37,23 @@ class UnitPull extends React.Component {
     this.db.off('child_changed', this.newUpload);
   }
 
+  renderGroup(color, array) {
+    return (
+      <div key={ color } className={ `group group-${color}` }>
+        { array.map( unit => {
+          return unit ? <Unit data={ unit } key={ `${unit.id}` } /> : null;
+        })}
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className="unit-pull" id={this.me}>
-        { Object.keys(this.state.units).map( up => {
-          return <Unit data={ this.state.units[up] } key={ this.state.units[up].id } />
+        { ['rainbow', 'gold', 'blue'].map( color => {
+            return this.renderGroup( color, values(this.state.units).filter( unit => {
+              return unit.color === color;
+            }) );
         }) }
         <div className="clear" />
       </div>
