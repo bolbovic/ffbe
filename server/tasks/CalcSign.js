@@ -6,18 +6,9 @@ const fs = require('fs'),
       Image = Canvas.Image,
       orderBy = require('lodash').orderBy;
 
-const BadColors = require('../helpers/BadColors.js');
+const { bad, offsetX, offsetY, toHex } = require('../helpers/Colors.js');
 const { saveUnits } = require('../helpers/DBSaver.js');
 const Task = require('./Task.js');
-
-const offsetX = 15;
-const offsetY = 3;
-
-// to put in a helper later...
-const toHex = (d, offset = 2) => {
-  return ("00000000"+(Number(d).toString(16))).slice(-offset).toUpperCase();
-};
-
 
 
 class CalcSign extends Task {
@@ -90,24 +81,12 @@ class CalcSign extends Task {
           let r = this.colorToHex(p[i]), g = this.colorToHex(p[i+1]), b = this.colorToHex(p[i+2]);
           let color = r + g + b;
 
-          if ( BadColors.indexOf(color) === -1 ) {
+          if ( bad.indexOf(color) === -1 ) {
             if ( colors[color] ) {
               colors[color].times++;
             } else {
               colors[color] = {times: 1, color};
             }
-          }
-
-          // debug mode... no need in the end
-          if ( BadColors.indexOf(color) !== -1 ) {
-            p[i + 0] = 0; // red
-            p[i + 1] = 0; // green
-            p[i + 2] = 0; // blue
-            p[i + 3] = 255;
-          } else {
-            p[i + 0] = parseInt(r,16)*16; // red
-            p[i + 1] = parseInt(g,16)*16; // green
-            p[i + 2] = parseInt(b,16)*16; // blue
           }
         }
 
@@ -115,13 +94,6 @@ class CalcSign extends Task {
           return o.times > (unit.sign.picWidth * unit.sign.picHeight / 1000);
         });
         unit.sign.colors = colors;
-
-
-        // debug mode but need to remove that later
-        cv.getContext('2d').putImageData(imageData, 0, 0);
-        let data = cv.toDataURL().replace(/^data:image\/\w+;base64,/, '');
-        let buf = new Buffer(data, 'base64');
-        fs.writeFile(`./tmp/${this.node.id}-unit-${idx}.png`, buf);
       });
       saveUnits(this.node.id, this.node.units);
       console.log(`Done with CalcSign ${this.node.id}`);
