@@ -8,11 +8,11 @@ const xmlToJS = require('xml-js').xml2js;
 
 let parser = new DomParser();
 
-request('http://exvius.gamepedia.com/Noctis', function (error, response, body) {
+request('http://exvius.gamepedia.com/Leon', function (error, response, body) {
   if (!error && response.statusCode == 200) {
     //const doc = parse(body);
     const doc = parser.parseFromString(body);
-    let content = xmlToJS(doc.getElementById('bodyContent').childNodes[1].outerHTML, {trim:true});
+    let content = xmlToJS(doc.getElementById('bodyContent').childNodes[1].outerHTML, {trim:true,addParent: true});
     let up = new UnitParser(content);
     console.log(up.parse());
     /*

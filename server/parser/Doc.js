@@ -6,8 +6,9 @@ class Doc {
   }
 
   parse() {
-    this.result = this.parserList.map( (parser) => {
-      return parser.parse();
+    this.result = {};
+    Object.keys(this.parserList).map( (key) => {
+      this.result[key] = this.parserList[key].parse();
     });
     return this.result;
   }
