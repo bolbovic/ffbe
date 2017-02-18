@@ -4,6 +4,7 @@ const UnitStats = require('../section/UnitStats.js');
 const UnitMaxStat = require('../section/UnitMaxStat.js');
 const UnitAbilities = require('../section/UnitAbilities.js');
 const UnitMagics = require('../section/UnitMagics.js');
+const UnitSprites = require('../section/UnitSprites.js');
 
 class Unit extends Doc {
   constructor(document) {
@@ -13,7 +14,7 @@ class Unit extends Doc {
     parsers.maxStats = new UnitMaxStat(document);
     parsers.abilities = new UnitAbilities(document);
     parsers.magics = new UnitMagics(document);
-    //parsers.push(new UnitSpells(document));
+    parsers.sprites = new UnitSprites(document);
 
     super(document, parsers);
   }

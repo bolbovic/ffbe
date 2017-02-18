@@ -14,7 +14,7 @@ class UnitMaxStat extends Section {
   parse() {
     let s = this.section, obj = [], i = this.sToInt.bind(this);
 
-    s.elements.forEach( (elem, idx) => {
+    s && s.elements.forEach( (elem, idx) => {
       if ( elem.name === 'tr' && elem.elements[0].name === 'td') {
         let e = elem.elements, rarity = {};
         rarity.rarity = this.rarityParsing(e[0]);
