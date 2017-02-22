@@ -31,6 +31,7 @@ request('http://exvius.gamepedia.com/Unit_List', function (error, response, body
             us.save();
           } catch (err) {
             console.log(`Error while saving ${unit.name}`);
+            console.log(err);
           }
         });
       }, idx * 2000);

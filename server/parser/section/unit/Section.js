@@ -12,6 +12,12 @@ class UnitSection extends Section {
     }
   }
 
+  imgToHref(img) {
+    let re = /src="([^"]+)"/;
+    let found = img.match(re);
+    return found ? found[1] : 'bad url';
+  }
+
   rarityParsing(elem) {
     let re = new RegExp(/Rarity-([1-6])\.png/, 'gi')
     let res = re.exec(this.sectionToString(elem));

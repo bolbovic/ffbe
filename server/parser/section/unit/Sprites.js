@@ -12,7 +12,7 @@ class UnitSprites extends Section {
       rarities.push(this.rarityParsing(elem.elements[0]));
     });
     s && s.elements[1].elements.forEach( (elem, idx) => {
-      obj[rarities[idx]] = this.sectionToString(elem.elements[0]);
+      obj[rarities[idx]] = this.imgToHref(this.sectionToString(elem.elements[0]));
     });
 
     return obj;

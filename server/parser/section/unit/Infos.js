@@ -12,7 +12,7 @@ class UnitInfos extends Section {
       if ( idx === 0 ) {
         obj.name = t(elem.elements[0]);
       } else if ( idx === 1 ) {
-        obj.img = t(elem.elements[0]);
+        obj.img = this.imgToHref(t(elem.elements[0]));
       } else {
         let p = this.textToProperty(t(elem.elements[0]));
         if ( p === 'trust') {
