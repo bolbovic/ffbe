@@ -11,11 +11,11 @@ class UnitPool extends EventEmitter {
   constructor() {
     super();
 
-    if (typeof UnitPull.__instance !== 'undefined') {
+    if (typeof UnitPool.__instance !== 'undefined') {
         throw new Error('UnitPool can only be instantiated once.');
     }
 
-    UnitPull.__instance = this;
+    UnitPool.__instance = this;
 
     Database.ref().child(ENDPOINT).once('value', (snap) => {
       this.units = snap.val() || {};
@@ -77,15 +77,15 @@ class UnitPool extends EventEmitter {
   }
 }
 
-UnitPull.getInstance = () => {
-  if (typeof UnitPull.__instance == 'undefined') {
-      return new UnitPull();
+UnitPool.getInstance = () => {
+  if (typeof UnitPool.__instance == 'undefined') {
+      return new UnitPool();
   }
   else {
-      return UnitPull.__instance;
+      return UnitPool.__instance;
   }
 }
 
-UnitPull.__instance = undefined;
+UnitPool.__instance = undefined;
 
-module.exports = UnitPull;
+module.exports = UnitPool;

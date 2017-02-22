@@ -1,5 +1,4 @@
 'use strict';
-
 require('dotenv').config();
 
 const request = require('request');
@@ -7,11 +6,9 @@ const DomParser = require('dom-parser');
 const xmlToJS = require('xml-js').xml2js;
 let parser = new DomParser();
 
-
 const UnitListParser = require('../server/parser/doc/UnitList.js');
 const UnitParser = require('../server/parser/doc/Unit.js');
 const UnitSaver = require('../server/db/UnitSaver.js');
-
 
 request('http://exvius.gamepedia.com/Unit_List', function (error, response, body) {
   if (!error && response.statusCode == 200) {
@@ -38,6 +35,7 @@ request('http://exvius.gamepedia.com/Unit_List', function (error, response, body
     });
   }
 });
+
 /*
 request(`http://exvius.gamepedia.com/Golbez`, function (err, res, body) {
   const unitDoc = parser.parseFromString(body);
@@ -45,6 +43,6 @@ request(`http://exvius.gamepedia.com/Golbez`, function (err, res, body) {
   let up = new UnitParser(unitContent);
   let us = new UnitSaver(up.parse());
   console.log(up.result.infos.name);
-  //us.save();
+  us.save();
 });
 */

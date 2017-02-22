@@ -1,13 +1,13 @@
 'use strict';
 require('dotenv').config();
 const { Database } = require('./helpers/firebase.js');
-const up = require('./helpers/UnitPull.js').getInstance();
+const up = require('./helpers/UnitPool.js').getInstance();
 const ElevenPullsAnalyzer = require('./tasks/ElevenPullsAnalyzer.js');
 
 const ENDPOINT = 'uploads';
 
 up.on('done', () => {
-  console.log('UnitPull ready.');
+  console.log('UnitPool ready.');
   Database
     .ref()
     .child(ENDPOINT)
