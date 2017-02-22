@@ -22,14 +22,28 @@ request('http://exvius.gamepedia.com/Unit_List', function (error, response, body
     ul.result.rares.forEach( (unit, idx) => {
       setTimeout( () => {
         request(`http://exvius.gamepedia.com/${unit.name}`, function (err, res, body) {
-          const unitDoc = parser.parseFromString(body);
-          let unitContent = xmlToJS(unitDoc.getElementById('bodyContent').childNodes[1].outerHTML, {trim:true,addParent: true});
-          let up = new UnitParser(unitContent);
-          let us = new UnitSaver(up.parse());
-          console.log(up.result.infos.name);
-          us.save();
+          try {
+            const unitDoc = parser.parseFromString(body);
+            let unitContent = xmlToJS(unitDoc.getElementById('bodyContent').childNodes[1].outerHTML, {trim:true,addParent: true});
+            let up = new UnitParser(unitContent);
+            let us = new UnitSaver(up.parse());
+            console.log(unit.name);
+            us.save();
+          } catch (err) {
+            console.log(`Error while saving ${unit.name}`);
+          }
         });
-      }, idx * 1000);
+      }, idx * 2000);
     });
   }
 });
+/*
+request(`http://exvius.gamepedia.com/Golbez`, function (err, res, body) {
+  const unitDoc = parser.parseFromString(body);
+  let unitContent = xmlToJS(unitDoc.getElementById('bodyContent').childNodes[1].outerHTML, {trim:true,addParent: true});
+  let up = new UnitParser(unitContent);
+  let us = new UnitSaver(up.parse());
+  console.log(up.result.infos.name);
+  //us.save();
+});
+*/
