@@ -2,10 +2,8 @@ const fs = require('fs');
 
 const lineIsEmpty = (data, width, height, y) => {
   let bool = true;
-  //console.log(y, width, height, data.length, data.length / 4, data.length / (4*width));
   for (let i = 0; i < width && bool; i++) {
     if (data[(y*width+i)*4+3]){
-    //  console.log(i, y, data[(y*height+i)*4+3]);
       bool = false;
     }
   }
