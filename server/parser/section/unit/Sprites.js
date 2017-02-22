@@ -1,10 +1,8 @@
-const Section = require('../Section.js');
+const Section = require('./Section.js');
 
 class UnitSprites extends Section {
   getSection(doc) {
-    let h2 = this.getElementById('Sprites', doc).parent;
-    let h2Parent = h2.parent;
-    return h2Parent.elements[h2Parent.elements.indexOf(h2)+1];
+    return this.getNextTableFromId('Sprites', doc);
   }
 
   parse() {

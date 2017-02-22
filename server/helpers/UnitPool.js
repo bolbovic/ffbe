@@ -5,17 +5,19 @@ const values = require('lodash').values;
 const { adaptSprite, offsetX, offsetY } = require('../helpers/Colors.js');
 const { Database } = require('../helpers/firebase.js');
 
-class UnitPull extends EventEmitter {
+const ENDPOINT = 'units';
+
+class UnitPool extends EventEmitter {
   constructor() {
     super();
 
     if (typeof UnitPull.__instance !== 'undefined') {
-        throw new Error('UnitPull can only be instantiated once.');
+        throw new Error('UnitPool can only be instantiated once.');
     }
 
     UnitPull.__instance = this;
 
-    Database.ref().child('units').once('value', (snap) => {
+    Database.ref().child(ENDPOINT).once('value', (snap) => {
       this.units = snap.val() || {};
       this.emit('done');
     });
@@ -24,7 +26,7 @@ class UnitPull extends EventEmitter {
   }
 
   getImage(baseUnit, imgId, id) {
-    let ref = Database.ref().child(`units/${id}/image`);
+    let ref = Database.ref().child(`${ENDPOINT}/${id}/image`);
     this._imgs[id] = new Image();
     let img = this._imgs[id];
     img.onload = () => {
@@ -53,7 +55,7 @@ class UnitPull extends EventEmitter {
 
   add(unit, imgId) {
     //console.log('adding an unit...');
-    let ref = Database.ref().child('units').push();
+    let ref = Database.ref().child(ENDPOINT).push();
     //console.log(ref.key);
     let id = Object.keys(this.units).length;
     let newUnit = {

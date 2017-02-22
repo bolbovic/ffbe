@@ -29,12 +29,6 @@ class Section {
     return {};
   }
 
-  rarityParsing(elem) {
-    let re = new RegExp(/Rarity-([1-6])\.png/, 'gi')
-    let res = re.exec(this.sectionToString(elem));
-    return parseInt(res[1]);
-  }
-
   recursiveAttributeSearch(section, attributeName, value, sp = false) {
     if ( section === undefined ) {
       return [];

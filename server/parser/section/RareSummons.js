@@ -1,15 +1,8 @@
-const Section = require('../Section.js');
+const Section = require('./unit/Section.js');
 
 class RareSummons extends Section {
   getSection(doc) {
-    let span = this.getElementById('Rare_Summon', doc);
-    if ( span ) {
-      let h2 = span.parent;
-      let h2Parent = h2.parent;
-      return h2Parent.elements[h2Parent.elements.indexOf(h2)+1];
-    } else {
-      return null;
-    }
+    return this.getNextTableFromId('Rare_Summon', doc);
   }
 
   sToInt(s) {

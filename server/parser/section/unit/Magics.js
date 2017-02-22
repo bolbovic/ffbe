@@ -1,15 +1,8 @@
-const Section = require('../Section.js');
+const Section = require('./Section.js');
 
-class UnitAbilities extends Section {
+class UnitMagics extends Section {
   getSection(doc) {
-    let span = this.getElementById('Special', doc);
-    if ( span ) {
-      let h3 = span.parent;
-      let h3Parent = h3.parent;
-      return h3Parent.elements[h3Parent.elements.indexOf(h3)+1];
-    } else {
-      return null;
-    }
+    return this.getNextTableFromId('Magic', doc);
   }
 
   sToInt(s) {
@@ -17,7 +10,7 @@ class UnitAbilities extends Section {
   }
 
   parse() {
-    let s = this.section, abilities = [], i = this.sToInt.bind(this);
+    let s = this.section, magics = [], i = this.sToInt.bind(this);
 
     s && s.elements.forEach( (elem, idx) => {
       if ( elem.name === 'tr' && elem.elements[0].name === 'td') {
@@ -29,12 +22,12 @@ class UnitAbilities extends Section {
         spell.desc = this.sectionToString(e[4]);
         spell.hits = i(e[5]);
         spell.mp = i(e[6]);
-        abilities.push(spell);
+        magics.push(spell);
       }
     });
 
-    return abilities;
+    return magics;
   }
 }
 
-module.exports = UnitAbilities;
+module.exports = UnitMagics;

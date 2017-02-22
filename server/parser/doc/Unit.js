@@ -1,10 +1,10 @@
 const Doc = require('../Doc.js');
-const UnitInfos = require('../section/UnitInfos.js');
-const UnitStats = require('../section/UnitStats.js');
-const UnitMaxStat = require('../section/UnitMaxStat.js');
-const UnitAbilities = require('../section/UnitAbilities.js');
-const UnitMagics = require('../section/UnitMagics.js');
-const UnitSprites = require('../section/UnitSprites.js');
+const UnitInfos = require('../section/unit/Infos.js');
+const UnitStats = require('../section/unit/Stats.js');
+const UnitMaxStat = require('../section/unit/MaxStat.js');
+const UnitAbilities = require('../section/unit/Abilities.js');
+const UnitMagics = require('../section/unit/Magics.js');
+const UnitSprites = require('../section/unit/Sprites.js');
 
 class Unit extends Doc {
   constructor(document) {

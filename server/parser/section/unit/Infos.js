@@ -1,4 +1,4 @@
-const Section = require('../Section.js');
+const Section = require('./Section.js');
 
 class UnitInfos extends Section {
   getSection(doc) {
