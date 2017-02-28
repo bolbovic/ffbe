@@ -22,7 +22,6 @@ class Unit {
   }
 
   findAbility(name) {
-    console.log(name);
     return this.formatAbility(this._abilitiesByName[name] || this._magicsByName[name]);
   }
 
