@@ -9,8 +9,8 @@ const sendToSlack = (txt, query, reply) => {
     text: txt,
     username: `FFBE Wiki - ${query.text}`
   };
-  let webHook = process.env.SLACK_WEBHOOK;
-  request.post({body:JSON.stringify(apiObject), url:webHook}, (err, res, body) => {
+  //let webHook = process.env.SLACK_WEBHOOK;
+  request.post({body:JSON.stringify(apiObject), url:query.response_url}, (err, res, body) => {
     if ( err ) {
       console.warn(err);
       reply({'ok': false, 'text': err});
