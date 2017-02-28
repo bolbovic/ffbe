@@ -6,6 +6,7 @@ const request = require('request');
 const sendToSlack = (txt, query, reply) => {
   let apiObject = {
     channel: query.channel || '@bolubo',
+    response_type: 'in_channel',
     text: txt,
     username: `FFBE Wiki - ${query.text}`
   };
