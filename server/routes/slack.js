@@ -1,23 +1,39 @@
 'use strict';
 
 const up = require('../helpers/WikiUnits.js').getInstance();
+const request = require('request');
+
+const sendToSlack = (txt, query, reply) => {
+  let apiObject = {
+    channel: query.channel || '@bolubo',
+    text: txt,
+    username: `FFBE Wiki - ${query.text}`
+  };
+  let webHook = process.env.SLACK_WEBHOOK;
+  request.post({body:JSON.stringify(apiObject), url:webHook}, (err, res, body) => {
+    if ( err ) {
+      console.warn(err);
+      reply({'ok': false, 'text': err});
+    } else {
+      reply({'ok': true});
+    }
+  });
+}
 
 module.exports = (request, reply) => {
-  //console.log(request.query.text);
   try {
     let [name, ...rest] = request.query.text.split(' ');
     let ability = rest.join(' ').toLowerCase();
-    //console.log(name);
-    //console.log(ability);
     let unit = up.getUnitByName(name);
     if ( unit ) {
       if ( ['abilities', 'infos', 'magics', 'maxStats', 'sprites', 'stats'].indexOf(ability) !== -1 ) {
-        reply({text:unit[ability]});
+        sendToSlack(unit[ability], request.query, reply);
       } else {
         if (ability) {
-          reply({text:unit.findAbility(ability) || 'Ability not found'});
+          let ab = unit.findAbility(ability) || 'Ability not found';
+          sendToSlack(ab, request.query, reply);
         } else {
-          reply({text:unit.toString()});
+          sendToSlack(unit.toString(), request.query, reply);
         }
       }
     } else {

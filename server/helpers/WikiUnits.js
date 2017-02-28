@@ -24,7 +24,7 @@ class Unit {
   }
 
   formatAbility(ab) {
-    return ab ? `${ab.name} ( ${ab.rarity}*${ab.lvl}, ${ab.mp > 0 ? `${ab.mp} MP` : '-' }): ${ab.desc}` : null;
+    return ab ? `${ab.name} (${ab.rarity}*${ab.lvl}, ${ab.mp > 0 ? `${ab.mp} MP` : '-' }): ${ab.desc}` : null;
   }
 
   toString() {
