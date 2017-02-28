@@ -25,10 +25,10 @@ module.exports = (request, reply) => {
     if ( validToken === request.query.token ) {
       let [name, ...rest] = request.query.text.split(' ');
       let ability = rest.join(' ').toLowerCase();
-      let unit = up.getUnitByName(name);
+      let unit = up.getUnitByName(name.toLowerCase());
       if ( unit ) {
         if ( ['abilities', 'infos', 'magics', 'maxStats', 'sprites', 'stats'].indexOf(ability) !== -1 ) {
-          sendToSlack(unit[ability], request.query, reply);
+          sendToSlack(JSON.stringify(unit[ability]), request.query, reply);
         } else {
           if (ability) {
             let ab = unit.findAbility(ability) || 'Ability not found';

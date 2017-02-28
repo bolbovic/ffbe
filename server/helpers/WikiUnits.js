@@ -24,7 +24,7 @@ class Unit {
   }
 
   formatAbility(ab) {
-    return ab ? `${ab.name} (${ab.rarity}*${ab.lvl}, ${ab.mp > 0 ? `${ab.mp} MP` : '-' }): ${ab.desc}` : null;
+    return ab ? `${this.infos.name} -> ${ab.name} (${ab.rarity}*${ab.lvl}, ${ab.mp > 0 ? `${ab.mp} MP` : '-' }): ${ab.desc}` : null;
   }
 
   toString() {
@@ -47,7 +47,7 @@ class WikiUnits extends EventEmitter {
       this._units = snap.val() || {};
       Object.keys(this._units).forEach( (id) => {
         console.log(id, this._units[id].infos.name);
-        this._unitsByName[this._units[id].infos.name] = new Unit(this._units[id]);
+        this._unitsByName[this._units[id].infos.name.toLowerCase()] = new Unit(this._units[id]);
       });
       this.emit('done');
     });
