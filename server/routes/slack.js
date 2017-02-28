@@ -17,7 +17,7 @@ module.exports = (request, reply) => {
         if (ability) {
           reply({text:unit.findAbility(ability) || 'Ability not found'});
         } else {
-          reply({text:(unit.toString()});
+          reply({text:unit.toString()});
         }
       }
     } else {
