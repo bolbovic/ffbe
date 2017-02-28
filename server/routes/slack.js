@@ -12,12 +12,12 @@ module.exports = (request, reply) => {
     let unit = up.getUnitByName(name);
     if ( unit ) {
       if ( ['abilities', 'infos', 'magics', 'maxStats', 'sprites', 'stats'].indexOf(ability) !== -1 ) {
-        reply(unit[ability]);
+        reply({text:unit[ability]});
       } else {
         if (ability) {
-          reply(unit.findAbility(ability) || 'Ability not found');
+          reply({text:unit.findAbility(ability) || 'Ability not found'});
         } else {
-          reply(unit.toString());
+          reply{text:(unit.toString()});
         }
       }
     } else {
