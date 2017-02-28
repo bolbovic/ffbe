@@ -15,7 +15,7 @@ const sendToSlack = (txt, query, reply) => {
       console.warn(err);
       reply({'ok': false, 'text': err});
     } else {
-      reply({'ok': true});
+      reply();
     }
   });
 }
