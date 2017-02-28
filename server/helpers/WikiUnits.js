@@ -1,6 +1,4 @@
-const Canvas = require('canvas'), Image = Canvas.Image;
 const EventEmitter = require('events');
-const values = require('lodash').values;
 
 const { Database } = require('../helpers/firebase.js');
 
